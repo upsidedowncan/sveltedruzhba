@@ -5,7 +5,7 @@
 	import RiPhoneFill from 'svelte-remixicon/RiPhoneFill.svelte';
 
 	let order = $state($currentOrder);
-	let mapEl: HTMLDivElement;
+	let mapEl: HTMLDivElement | null = $state(null);
 	let map: any;
 	let L: any;
 	let driverMarker: any;

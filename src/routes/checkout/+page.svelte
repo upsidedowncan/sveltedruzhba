@@ -11,6 +11,7 @@
 	import RiArrowDownSLine from 'svelte-remixicon/RiArrowDownSLine.svelte';
 	import RiMapPin2Fill from 'svelte-remixicon/RiMapPin2Fill.svelte';
 	import RiCurrentLine from 'svelte-remixicon/RiCurrentLine.svelte';
+	import RiCurrentLine from 'svelte-remixicon/RiCurrentLine.svelte';
 
 	let cartItems = $state<CartItem[]>([]);
 	let orderType = $state<'delivery' | 'pickup'>('delivery');
@@ -51,6 +52,26 @@
 	function removeItem(id: number) {
 		cartItems = cartItems.filter((ci) => ci.item.id !== id);
 		localStorage.setItem('druzhba-cart', JSON.stringify(cartItems));
+	}
+
+	async function fetchLocation() {
+		if (!navigator.geolocation) return;
+		locatingLoading = true;
+		navigator.geolocation.getCurrentPosition(
+			async (pos) => {
+				try {
+					const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json&accept-language=ru`);
+					const data = await res.json();
+					if (data.address) {
+						street = data.address.road || data.address.pedestrian || '';
+						building = data.address.house_number || '';
+					}
+				} catch {}
+				locatingLoading = false;
+			},
+			() => { locatingLoading = false; },
+			{ enableHighAccuracy: true, timeout: 10000 }
+		);
 	}
 
 	function proceed() {
@@ -101,7 +122,17 @@
 		<!-- Delivery address -->
 		{#if orderType === 'delivery'}
 			<div class="space-y-3">
-				<Label.Root class="text-sm font-bold text-[#3C1518] block">Адрес доставки</Label.Root>
+				<div class="flex items-center justify-between">
+					<Label.Root class="text-sm font-bold text-[#3C1518]">Адрес доставки</Label.Root>
+					<button
+						onclick={fetchLocation}
+						disabled={locatingLoading}
+						class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-[#A4161A] transition-all hover:bg-[#A4161A]/5 active:scale-95 disabled:opacity-50"
+					>
+						<RiCurrentLine size="14px" class={locatingLoading ? 'animate-spin' : ''} />
+						<span>{locatingLoading ? 'Определяем...' : 'Моё местоположение'}</span>
+					</button>
+				</div>
 
 				<!-- Building type -->
 				<Select.Root type="single" bind:value={buildingType}>

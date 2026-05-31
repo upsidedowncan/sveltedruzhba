@@ -64,11 +64,12 @@
 
 		<!-- Promo cards -->
 		{#each promos as promo, i}
+			{@const Icon = promo.icon}
 			<div
 				class="flex min-w-[240px] shrink-0 snap-start items-center gap-3 rounded-xl {promo.bg} {promo.text} px-4 py-3.5"
 			>
 				<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg {promo.id === 'promo-3' ? 'bg-[#A4161A]/10 text-[#A4161A]' : 'bg-white/15'}">
-					<svelte:component this={promo.icon} size="20px" />
+					<Icon size="20px" />
 				</div>
 				<div class="min-w-0 flex-1">
 					<p class="text-sm font-bold leading-tight">{promo.title}</p>
