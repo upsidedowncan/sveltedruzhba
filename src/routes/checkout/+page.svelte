@@ -11,7 +11,6 @@
 	import RiArrowDownSLine from 'svelte-remixicon/RiArrowDownSLine.svelte';
 	import RiMapPin2Fill from 'svelte-remixicon/RiMapPin2Fill.svelte';
 	import RiCurrentLine from 'svelte-remixicon/RiCurrentLine.svelte';
-	import RiCurrentLine from 'svelte-remixicon/RiCurrentLine.svelte';
 
 	let cartItems = $state<CartItem[]>([]);
 	let orderType = $state<'delivery' | 'pickup'>('delivery');
