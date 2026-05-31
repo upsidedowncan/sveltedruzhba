@@ -10,12 +10,14 @@
 		open = $bindable(false),
 		items = $bindable([]),
 		onRemove,
-		onClear
+		onClear,
+		onCheckout
 	}: {
 		open: boolean;
 		items: { item: MenuItem; qty: number }[];
 		onRemove: (id: number) => void;
 		onClear: () => void;
+		onCheckout?: () => void;
 	} = $props();
 
 	let total = $derived(items.reduce((sum, { item, qty }) => sum + item.price * qty, 0));
@@ -86,6 +88,7 @@
 						Очистить
 					</button>
 					<button
+						onclick={onCheckout}
 						class="flex-[2] rounded-xl bg-[#A4161A] py-3 text-sm font-bold text-[#FFF8F0] transition-all hover:bg-[#8B1215] active:scale-[0.98]"
 					>
 						Оформить заказ

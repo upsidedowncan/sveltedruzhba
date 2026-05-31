@@ -41,6 +41,13 @@
 					setTimeout(() => { phase = 'open'; }, 350);
 				});
 			});
+		} else if (!open && (phase === 'open' || phase === 'dragging')) {
+			phase = 'closing';
+			offset = sheetH || window.innerHeight;
+			setTimeout(() => {
+				offset = 0;
+				phase = 'closed';
+			}, 300);
 		}
 	});
 
@@ -124,7 +131,7 @@
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<div
 			use:measure
-			class="absolute bottom-0 left-0 right-0 md:left-auto md:right-0 md:top-0 md:bottom-0 md:w-[380px] max-h-[85vh] md:max-h-none rounded-t-2xl md:rounded-none bg-[#FFF8F0] flex flex-col"
+			class="absolute bottom-0 left-0 right-0 md:left-auto md:right-0 md:top-0 md:bottom-0 md:w-[380px] max-h-[85vh] md:max-h-none rounded-t-2xl md:rounded-none bg-[#FFF8F0] flex flex-col z-10"
 			style="will-change: transform; box-shadow: 0 -4px 24px rgba(60, 21, 24, 0.1); transform: translateY({offset}px); transition: {phase === 'dragging' ? 'none' : 'transform 0.35s cubic-bezier(0.32, 0.72, 0, 1)'};"
 		>
 			<!-- Drag handle -->

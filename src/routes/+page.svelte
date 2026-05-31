@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import PromoCards from '$lib/components/PromoCards.svelte';
 	import CategoryChips from '$lib/components/CategoryChips.svelte';
 	import MenuGrid from '$lib/components/MenuGrid.svelte';
@@ -15,6 +16,21 @@
 	// Add-to-cart sheet state
 	let addSheetOpen = $state(false);
 	let addSheetItem = $state<MenuItem | null>(null);
+
+	// Save cart to localStorage whenever it changes
+	$effect(() => {
+		localStorage.setItem('druzhba-cart', JSON.stringify(cartItems));
+	});
+
+	// Load cart from localStorage on mount
+	$effect(() => {
+		const stored = localStorage.getItem('druzhba-cart');
+		if (stored) {
+			try {
+				cartItems = JSON.parse(stored);
+			} catch {}
+		}
+	});
 
 	function handleAddClick(item: MenuItem) {
 		addSheetItem = item;
@@ -64,6 +80,10 @@
 	function clearCart() {
 		cartItems = [];
 	}
+
+	function goToCheckout() {
+		goto('/checkout');
+	}
 </script>
 
 <svelte:head>
@@ -101,5 +121,5 @@
 	<AddToCartSheet bind:open={addSheetOpen} bind:item={addSheetItem} onConfirm={handleAddConfirm} />
 
 	<!-- Cart -->
-	<CartDrawer bind:open={cartOpen} bind:items={cartItems} onRemove={removeFromCart} onClear={clearCart} />
+	<CartDrawer bind:open={cartOpen} bind:items={cartItems} onRemove={removeFromCart} onClear={clearCart} onCheckout={goToCheckout} />
 </div>
